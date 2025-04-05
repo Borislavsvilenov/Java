@@ -5,11 +5,18 @@ public class Main {
     int Width = 800;
     int Height = 800;
 
-    JFrame frame = new JFrame("FRAME");
-    frame.setVisible(true);
+    JFrame frame = new JFrame("SNAKE");
     frame.setSize(Width, Height);
     frame.setLocationRelativeTo(null);
     frame.setResizable(false);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  
+    Game game = new Game(Width, Height);
+    frame.add(game);
+    frame.pack();
+
+    frame.setVisible(true);
+
+    game.requestFocus();
   }
 }
