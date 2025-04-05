@@ -11,35 +11,137 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     int player;
     int scaleX;
     int scaleY;
+    int layer;
 
-    Tile(int x, int y, int p, int sx, int sy) {
+    ArrayList<Tile> Board;
+
+
+
+    Tile(int x, int y, int p, int sx, int sy, int layer) {
       this.x = x;
       this.y = y;
       this.player = p;
-      this.scaleX = sx;
-      this.scaleY = sy;
+      this.scaleX = sx/3;
+      this.scaleY = sy/3;
+      this.layer = layer;
+        
+      Board = new ArrayList<Tile>();
+
+      if (layer != 0) {
+        for (int i = 0; i < 3; i++) {
+          for (int j = 0; j < 3; j++) {
+            Board.add(new Tile(j+(3*x), i+(3*y), 0, scaleX, scaleY, layer - 1));
+          }
+        }
+      }
     }
 
     public void draw(Graphics g) {
       g.setColor(Color.white);
+      
+      if (layer == 0) {
+        if (this.player == 0) {
+          return;
+        }
 
-      if (this.player == 0) {
-        return;
-      }
+        if (this.player == 1) {
+          g.drawLine(x*scaleX, y*scaleY, (x+1)*scaleX, (y+1)*scaleY);
+          g.drawLine((x+1)*scaleX, y*scaleY, x*scaleX, (y+1)*scaleY);
+        }
 
-      if (this.player == 1) {
-        g.drawLine(x*scaleX, y*scaleY, (x+1)*scaleX, (y+1)*scaleY);
-        g.drawLine((x+1)*scaleX, y*scaleY, x*scaleX, (y+1)*scaleY);
-      }
-
-      if (this.player == -1) {
-        g.drawOval(x, y, scaleX, scaleY);
+        if (this.player == -1) {
+          g.drawOval(x, y, scaleX, scaleY);
+        }
+      } else {
+        for (int i = 0; i < 9; i++) {
+          Board.get(i).draw(g);
+        }
       }
     }
 
-    public void makeMove(int turn) {
-      if (this.player == 0) {
-        this.player = turn;
+    public boolean makeMove(int x, int y, int turn) {
+      if (this.layer == 0) {
+        if (this.x == x && this.y == y) {
+          if (this.player == 0) {
+            this.player = turn;
+            return true;
+          } else {
+            return false;
+          }
+        } else { 
+          return false; 
+        }
+      } else {
+        for (int i = 0; i < 9; i++) {
+          if (Board.get(i).makeMove(x, y, turn)) {
+            return true;
+          }
+        }
+      } 
+      return false;
+    }
+      
+    public void checkVictory() {
+      if(!checkWin() && layer != 0) {
+        for(int i = 0; i < 9; i++) {
+          Board.get(i).checkVictory();
+        }
+      }
+    }
+
+    public boolean checkWin() {
+      if (layer == 0) {
+        return false;
+      } else if (Board.get(0).player == 1 && Board.get(1).player == 1 && Board.get(2).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(3).player == 1 && Board.get(4).player == 1 && Board.get(5).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(6).player == 1 && Board.get(7).player == 1 && Board.get(8).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(0).player == 1 && Board.get(3).player == 1 && Board.get(6).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(1).player == 1 && Board.get(4).player == 1 && Board.get(7).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(2).player == 1 && Board.get(5).player == 1 && Board.get(8).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(0).player == 1 && Board.get(4).player == 1 && Board.get(8).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(2).player == 1 && Board.get(4).player == 1 && Board.get(6).player == 1) {
+        this.player = 1;
+        return true;
+      } else if (Board.get(0).player == -1 && Board.get(1).player == -1 && Board.get(2).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(3).player == -1 && Board.get(4).player == -1 && Board.get(5).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(6).player == -1 && Board.get(7).player == -1 && Board.get(8).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(0).player == -1 && Board.get(3).player == -1 && Board.get(6).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(1).player == -1 && Board.get(4).player == -1 && Board.get(7).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(2).player == -1 && Board.get(5).player == -1 && Board.get(8).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(0).player == -1 && Board.get(4).player == -1 && Board.get(8).player == -1) {
+        this.player = -1;
+        return true;
+      } else if (Board.get(2).player == -1 && Board.get(4).player == -1 && Board.get(6).player == -1) {
+        this.player = -1;
+        return true;
+      } else {
+        return false;
       }
     }
   }
@@ -49,10 +151,11 @@ public class Game extends JPanel implements ActionListener, KeyListener {
   int SIZE;
   int scaleX;
   int scaleY;
+  int turn = 1;
 
   Timer Loop;
 
-  ArrayList<Tile> Board;
+  Tile Board;
   Random rand;
 
   Game(int w, int h, int scale) {
@@ -66,16 +169,14 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     setFocusable(true);
     addKeyListener(this);
 
-    Board = new ArrayList<Tile>();
+
+    Board = new Tile(0, 0, 0, w*3, h*3, scale);
     rand  = new Random();
-    for (int i = 0; i < SIZE; i++) {
-      for (int j = 0; j < SIZE; j++) {
-        Board.add(new Tile(j, i, 0, scaleX, scaleY));
-      }
-    }
 
     Loop = new Timer(100, this);
     Loop.start();
+
+    move();
   }
 
   public void paintComponent(Graphics g) {
@@ -94,9 +195,14 @@ public class Game extends JPanel implements ActionListener, KeyListener {
       g.drawLine(0, i*scaleY, w, i*scaleY);
     }
 
-    for (int i = 0; i < Board.size(); i++) {
-      Tile t = Board.get(i);
-      t.draw(g);
+    Board.draw(g);
+    
+  }
+  
+  public void move() {
+    if(Board.makeMove(1, 2, turn)) {
+      turn *= -1;
+      Board.checkVictory();
     }
   }
 
