@@ -6,6 +6,8 @@ import java.util.Random;
 public class Game extends JPanel implements ActionListener, KeyListener, MouseListener {
   int w;
   int h;
+  int lx = -1;
+  int ly = -1;
   int SIZE;
   int scaleX;
   int scaleY;
@@ -43,13 +45,22 @@ public class Game extends JPanel implements ActionListener, KeyListener, MouseLi
 
   public void draw(Graphics g) {
     // Grid
+    Graphics2D g2D = (Graphics2D) g;
     g.setColor(Color.white);
     for (int i = 1; i < SIZE; i++) {
+      if (i % 3 == 0) {
+        g2D.setStroke(new BasicStroke(8));
+      }
       g.drawLine(i*scaleX, 0, i*scaleX, h);
+      g2D.setStroke(new BasicStroke(2));
     }
 
     for (int i = 1; i < SIZE; i++) {
+      if (i % 3 == 0) {
+        g2D.setStroke(new BasicStroke(8));
+      }
       g.drawLine(0, i*scaleY, w, i*scaleY);
+      g2D.setStroke(new BasicStroke(2));
     }
 
     Board.draw(g);
@@ -57,9 +68,17 @@ public class Game extends JPanel implements ActionListener, KeyListener, MouseLi
   }
   
   public void move(int x, int y) {
-    if(Board.makeMove(x, y, turn)) {
+    if(Board.makeMove(x, y, turn, lx, ly, SIZE)) {
       turn *= -1;
       Board.checkVictory();
+
+      if(Board.Board.get((x % (SIZE / 3)) + (3 * (y % (SIZE / 3)))).checkWin()) {
+        lx = -1;
+        ly = -1;
+      } else {
+        lx = x;
+        ly = y;
+      }
     }
   }
 
