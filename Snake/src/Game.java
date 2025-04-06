@@ -73,7 +73,16 @@ public class Game extends JPanel implements ActionListener, KeyListener{
     //  FOOD
     g.setColor(Color.red);
     g.fillRect(food.x * SIZE, food.y * SIZE, SIZE, SIZE);
-
+    
+    //  SCORE
+    g.setFont(new Font("Arial", Font.PLAIN, 16));
+    if(gameOver) {
+      g.setColor(Color.red);
+      g.drawString("Game Over: " + String.valueOf(snake.size()), SIZE - 16, SIZE);
+    } else {
+      g.setColor(Color.green);
+      g.drawString("Score: " + String.valueOf(snake.size()), SIZE - 16, SIZE);
+    }
   }
 
   public void placeFood() {
