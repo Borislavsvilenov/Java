@@ -13,7 +13,7 @@ public class Tile {
 
   ArrayList<Tile> Board;
 
-
+  private static final long serialVersionUID = 1L;
 
   Tile(int x, int y, int p, int sx, int sy, int layer) {
     this.x = x;

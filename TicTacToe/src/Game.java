@@ -12,6 +12,8 @@ public class Game extends JPanel implements ActionListener, KeyListener, MouseLi
   int scaleX;
   int scaleY;
   int turn = 1;
+  
+  private static final long serialVersionUID = 1L;
 
   Timer Loop;
 
@@ -67,7 +69,7 @@ public class Game extends JPanel implements ActionListener, KeyListener, MouseLi
     
   }
   
-  public void move(int x, int y) {
+  public void makeMove(int x, int y) {
     if(Board.makeMove(x, y, turn, lx, ly, SIZE)) {
       turn *= -1;
       Board.checkVictory();
@@ -119,7 +121,7 @@ public class Game extends JPanel implements ActionListener, KeyListener, MouseLi
     int mx = (int)Math.floor(e.getX()/scaleX);
     int my = (int)Math.floor(e.getY()/scaleY);
 
-    move(mx, my);
+    makeMove(mx, my);
   }
 
   @Override
