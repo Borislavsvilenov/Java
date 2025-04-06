@@ -157,6 +157,10 @@ public class Game extends JPanel implements ActionListener, KeyListener{
       gameOver = false;
     }
 
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+      System.exit(0);
+    }
+
   }
 
   @Override
