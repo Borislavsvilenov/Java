@@ -83,6 +83,7 @@ public class Tile {
           Board.get(i).checkVictory();
         }
       }  
+      checkWin();
     }
 
     public boolean checkWin() {
