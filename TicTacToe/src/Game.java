@@ -2,150 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import java.util.ArrayList;
 
-public class Game extends JPanel implements ActionListener, KeyListener {
-  private class Tile {
-    int x;
-    int y;
-    int player;
-    int scaleX;
-    int scaleY;
-    int layer;
-
-    ArrayList<Tile> Board;
-
-
-
-    Tile(int x, int y, int p, int sx, int sy, int layer) {
-      this.x = x;
-      this.y = y;
-      this.player = p;
-      this.scaleX = sx/3;
-      this.scaleY = sy/3;
-      this.layer = layer;
-        
-      Board = new ArrayList<Tile>();
-
-      if (layer != 0) {
-        for (int i = 0; i < 3; i++) {
-          for (int j = 0; j < 3; j++) {
-            Board.add(new Tile(j+(3*x), i+(3*y), 0, scaleX, scaleY, layer - 1));
-          }
-        }
-      }
-    }
-
-    public void draw(Graphics g) {
-      g.setColor(Color.white);
-      
-      if (layer == 0) {
-        if (this.player == 0) {
-          return;
-        }
-
-        if (this.player == 1) {
-          g.drawLine(x*scaleX, y*scaleY, (x+1)*scaleX, (y+1)*scaleY);
-          g.drawLine((x+1)*scaleX, y*scaleY, x*scaleX, (y+1)*scaleY);
-        }
-
-        if (this.player == -1) {
-          g.drawOval(x, y, scaleX, scaleY);
-        }
-      } else {
-        for (int i = 0; i < 9; i++) {
-          Board.get(i).draw(g);
-        }
-      }
-    }
-
-    public boolean makeMove(int x, int y, int turn) {
-      if (this.layer == 0) {
-        if (this.x == x && this.y == y) {
-          if (this.player == 0) {
-            this.player = turn;
-            return true;
-          } else {
-            return false;
-          }
-        } else { 
-          return false; 
-        }
-      } else {
-        for (int i = 0; i < 9; i++) {
-          if (Board.get(i).makeMove(x, y, turn)) {
-            return true;
-          }
-        }
-      } 
-      return false;
-    }
-      
-    public void checkVictory() {
-      if(!checkWin() && layer != 0) {
-        for(int i = 0; i < 9; i++) {
-          Board.get(i).checkVictory();
-        }
-      }
-    }
-
-    public boolean checkWin() {
-      if (layer == 0) {
-        return false;
-      } else if (Board.get(0).player == 1 && Board.get(1).player == 1 && Board.get(2).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(3).player == 1 && Board.get(4).player == 1 && Board.get(5).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(6).player == 1 && Board.get(7).player == 1 && Board.get(8).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(0).player == 1 && Board.get(3).player == 1 && Board.get(6).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(1).player == 1 && Board.get(4).player == 1 && Board.get(7).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(2).player == 1 && Board.get(5).player == 1 && Board.get(8).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(0).player == 1 && Board.get(4).player == 1 && Board.get(8).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(2).player == 1 && Board.get(4).player == 1 && Board.get(6).player == 1) {
-        this.player = 1;
-        return true;
-      } else if (Board.get(0).player == -1 && Board.get(1).player == -1 && Board.get(2).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(3).player == -1 && Board.get(4).player == -1 && Board.get(5).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(6).player == -1 && Board.get(7).player == -1 && Board.get(8).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(0).player == -1 && Board.get(3).player == -1 && Board.get(6).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(1).player == -1 && Board.get(4).player == -1 && Board.get(7).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(2).player == -1 && Board.get(5).player == -1 && Board.get(8).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(0).player == -1 && Board.get(4).player == -1 && Board.get(8).player == -1) {
-        this.player = -1;
-        return true;
-      } else if (Board.get(2).player == -1 && Board.get(4).player == -1 && Board.get(6).player == -1) {
-        this.player = -1;
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
+public class Game extends JPanel implements ActionListener, KeyListener, MouseListener {
   int w;
   int h;
   int SIZE;
@@ -168,6 +26,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     setBackground(Color.black);
     setFocusable(true);
     addKeyListener(this);
+    addMouseListener(this);
 
 
     Board = new Tile(0, 0, 0, w*3, h*3, scale);
@@ -175,8 +34,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     Loop = new Timer(100, this);
     Loop.start();
-
-    move();
   }
 
   public void paintComponent(Graphics g) {
@@ -199,8 +56,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     
   }
   
-  public void move() {
-    if(Board.makeMove(1, 2, turn)) {
+  public void move(int x, int y) {
+    if(Board.makeMove(x, y, turn)) {
       turn *= -1;
       Board.checkVictory();
     }
@@ -226,6 +83,34 @@ public class Game extends JPanel implements ActionListener, KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     // no need
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+  
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent e) {
+    int mx = (int)Math.floor(e.getX()/scaleX);
+    int my = (int)Math.floor(e.getY()/scaleY);
+
+    move(mx, my);
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent e) {
+
+  }
+
+  @Override
+  public void mouseExited(MouseEvent e) {
+
   }
 
 }

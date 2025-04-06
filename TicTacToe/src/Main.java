@@ -11,7 +11,7 @@ public class Main {
     frame.setResizable(false);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   
-    Game game = new Game(Width, Height, 1);
+    Game game = new Game(Width, Height, 2);
     frame.add(game);
     frame.pack();
 
