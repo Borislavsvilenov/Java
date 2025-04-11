@@ -121,12 +121,12 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     ball.update();
 
     if(p1.collides(ball.x, ball.y, ball.SIZE)) {
-      ball.vx = Math.abs(ball.vx) + 2;
+      ball.vx = Math.abs(ball.vx) + 1;
       ball.vy = (long) Math.ceil(ball.vy*rand.nextDouble(-2, 2) + 0.5);
     }
 
     if (p2.collides(ball.x, ball.y, ball.SIZE)) {
-      ball.vx = -(Math.abs(ball.vx) + 2);
+      ball.vx = -(Math.abs(ball.vx) + 1);
       ball.vy = (long) Math.ceil(ball.vy*rand.nextDouble(-2, 2) + 0.5);
     }
 
