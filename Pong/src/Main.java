@@ -5,7 +5,7 @@ public class Main {
     int Width = 900;
     int Height = 600;
 
-    JFrame frame = new JFrame("TicTacToe");
+    JFrame frame = new JFrame("Pong");
     frame.setSize(Width, Height);
     frame.setLocationRelativeTo(null);
     frame.setResizable(false);
