@@ -1,15 +1,45 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 public class Game extends JPanel implements ActionListener, KeyListener{
+  private class Ball {
+    int x;
+    int y;
+  
+    int vx;
+    int vy;
+
+    int SIZE = 20;
+
+    Ball(int w, int h, int vx, int vy) {
+      x = w/2;
+      y = h/2;
+      this.vx = vx;
+      this.vy = vy;
+    }
+
+    public void draw(Graphics g) {
+      g.fillOval(x-(SIZE/2), y-(SIZE/2), SIZE, SIZE);
+    }
+
+    public void update() {
+      x += vx;
+      y += vy;
+    }
+  }
+
   int w;
   int h;
 
   Player p1;
   Player p2;
 
+  Ball ball;
+
   Timer Loop;
+  Random rand;
 
   Game(int w, int h) {
     this.w = w;
@@ -17,6 +47,10 @@ public class Game extends JPanel implements ActionListener, KeyListener{
 
     p1 = new Player(20, 225);
     p2 = new Player(this.w - 40, 225);
+
+    rand = new Random();
+
+    ball = new Ball(this.w, this.h, rand.nextInt(15) + 5, rand.nextInt(15) + 5);
     
     Loop = new Timer(25, this);
     Loop.start();
@@ -36,6 +70,9 @@ public class Game extends JPanel implements ActionListener, KeyListener{
     // draw players
     p1.draw(g);
     p2.draw(g);
+    
+    // draw ball
+    ball.draw(g);
     
     // draw field
     g.drawLine(w/2, 10, w/2, h - 10);
@@ -70,6 +107,7 @@ public class Game extends JPanel implements ActionListener, KeyListener{
   public void actionPerformed(ActionEvent e) {
     p1.update();
     p2.update();
+    ball.update();
     repaint();
   }  
 
