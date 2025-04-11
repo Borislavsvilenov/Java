@@ -23,6 +23,11 @@ public class Box {
         return (dx * dx + dy * dy) < (r * r);
     }
 
+    public boolean contains (int x, int y, int r) {
+        return (x - r >= this.x) && (x + r <= this.x + this.w) &&
+                (y - r >= this.y) && (y + r <= this.y + this.h);
+    }
+
     public void outLine (Graphics g) {
         g.setColor(Color.white);
         g.drawRect(x, y, w, h);

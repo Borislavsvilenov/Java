@@ -1,5 +1,3 @@
-import java.awt.*;
-
 public class Player extends Box {
   int v = 0;
 
@@ -12,9 +10,12 @@ public class Player extends Box {
   }
 
   public void update(int h) {
-    if (y >= h - 10 && y <=10) {
+    if (y <= 10 && v < 0) {
       return;
+    } else if (y >= h - 10 - this.h && v > 0) {
+      return;
+    } else {
+      y += v;
     }
-    y += v;
   }
 }
