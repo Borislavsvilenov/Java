@@ -3,13 +3,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-public class Game extends JPanel implements ActionListener, KeyListener{
+public class Game extends JPanel implements ActionListener, KeyListener {
   private class Ball {
     int x;
     int y;
   
     int vx;
     int vy;
+
+    int w;
+    int h;
 
     int SIZE = 20;
 
@@ -18,15 +21,28 @@ public class Game extends JPanel implements ActionListener, KeyListener{
       y = h/2;
       this.vx = vx;
       this.vy = vy;
+      this.w = w;
+      this.h = h;
     }
 
     public void draw(Graphics g) {
       g.fillOval(x-(SIZE/2), y-(SIZE/2), SIZE, SIZE);
     }
 
+    public void collideWalls() {
+      if (y <= 10 - SIZE/2) {
+        vy *= -1;
+        y = 10 - SIZE/2;
+      } else if (y >= h - 10 - SIZE/2) {
+        vy *= -1;
+        y = h - 10 - SIZE/2;
+      }
+    }
+
     public void update() {
       x += vx;
       y += vy;
+      collideWalls();
     }
   }
 
@@ -38,6 +54,8 @@ public class Game extends JPanel implements ActionListener, KeyListener{
 
   Ball ball;
 
+  Box box;
+
   Timer Loop;
   Random rand;
 
@@ -45,12 +63,14 @@ public class Game extends JPanel implements ActionListener, KeyListener{
     this.w = w;
     this.h = h;
 
-    p1 = new Player(20, 225);
-    p2 = new Player(this.w - 40, 225);
+    p1 = new Player(20, 225, 20, 150);
+    p2 = new Player(this.w - 40, 225, 20, 150);
 
     rand = new Random();
 
     ball = new Ball(this.w, this.h, rand.nextInt(15) + 5, rand.nextInt(15) + 5);
+
+    box = new Box(10, 10, this.w - 20, this.h - 20);
     
     Loop = new Timer(25, this);
     Loop.start();
@@ -68,20 +88,29 @@ public class Game extends JPanel implements ActionListener, KeyListener{
 
   public void draw(Graphics g) {
     // draw players
-    p1.draw(g);
-    p2.draw(g);
+    p1.fill(g);
+    p2.fill(g);
     
     // draw ball
     ball.draw(g);
     
     // draw field
+    box.outLine(g);
     g.drawLine(w/2, 10, w/2, h - 10);
-    g.drawLine(10, 10, w - 10, 10);
-    g.drawLine(10, h - 10, w - 10, h - 10);
-    g.drawLine(10, 10, 10, h - 10);
-    g.drawLine(w - 10, 10, w - 10, h - 10);
-
     g.drawOval(w/2 -100, h/2 -100, 200, 200);
+  }
+
+  public void update() {
+    p1.update(h);
+    p2.update(h);
+    ball.update();
+    if(p1.collides(ball.x, ball.y, ball.SIZE)) {
+      ball.vx = Math.abs(ball.vx);
+    }
+
+    if (p2.collides(ball.x, ball.y, ball.SIZE)) {
+      ball.vx = -Math.abs(ball.vx);
+    }
   }
 
   @Override
@@ -105,9 +134,7 @@ public class Game extends JPanel implements ActionListener, KeyListener{
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    p1.update();
-    p2.update();
-    ball.update();
+    update();
     repaint();
   }  
 

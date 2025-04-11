@@ -1,25 +1,20 @@
-import javax.swing.*;
 import java.awt.*;
 
-public class Player {
-  int x;
-  int y;
+public class Player extends Box {
   int v = 0;
-  int w = 20;
-  int h = 150;
 
-  Player (int x, int y) {
+  Player (int x, int y, int w, int h) {
+    super(x , y, w, h);
     this.x = x;
     this.y = y;
-
+    this.w = w;
+    this.h = h;
   }
 
-  public void draw (Graphics g) {
-    g.setColor(Color.white);
-    g.fillRect(x, y, w, h);
-  }
-
-  public void update() {
+  public void update(int h) {
+    if (y >= h - 10 && y <=10) {
+      return;
+    }
     y += v;
   }
 }
